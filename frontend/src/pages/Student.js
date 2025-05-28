@@ -5,7 +5,6 @@ import ChatPopup from "./ChatPopup";
 
 const Student = () => {
   const [studentId] = useState(() => {
-    // Unique only per tab
     return sessionStorage.getItem("studentId") || uuidv4();
   });
 
@@ -22,7 +21,6 @@ const Student = () => {
     sessionStorage.setItem("studentId", studentId);
   }, [studentId]);
 
-  // Handle new poll from teacher
   useEffect(() => {
     socket.on("poll-started", (poll) => {
       setCurrentPoll(poll);
@@ -47,7 +45,6 @@ const Student = () => {
     };
   }, []);
 
-  // Timer countdown
   useEffect(() => {
     if (!currentPoll || submitted || timeLeft <= 0) return;
 
@@ -123,18 +120,31 @@ const Student = () => {
             <>
               <h4>Live Results:</h4>
               <ul>
-                {["A", "B", "C", "D"].map((opt) => (
+                {currentPoll.options.map((opt) => (
                   <li key={opt}>
-                    {opt}: {results[opt] || 0} votes
+                    {opt}: {results[opt] || 0} votes{" "}
+                    {opt === currentPoll.correctAnswer && "✅"}
                   </li>
                 ))}
               </ul>
+
+              {submitted && (
+                <p>
+                  You selected: <strong>{selectedOption}</strong> —{" "}
+                  {selectedOption === currentPoll.correctAnswer ? (
+                    <span style={{ color: "green" }}>Correct ✅</span>
+                  ) : (
+                    <span style={{ color: "red" }}>Incorrect ❌</span>
+                  )}
+                </p>
+              )}
             </>
           )}
         </>
       ) : (
         <p>Waiting for the teacher to start a poll...</p>
       )}
+
       <ChatPopup name={name} />
     </div>
   );
