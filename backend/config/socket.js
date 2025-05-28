@@ -11,6 +11,10 @@ const initializeSocket = (io) => {
     socket.on('new-poll', (poll) => handleNewPoll(io, poll));
     socket.on('submit-answer', (data) => handleSubmitAnswer(io, data));
     socket.on('disconnect', () => handleDisconnect(socket));
+    socket.on('send-message', ({ sender, message }) => {
+  io.emit('receive-message', { sender, message, timestamp: Date.now() });
+});
+
   });
 };
 

@@ -6,7 +6,11 @@ const handleNewPoll = (io, poll) => {
 
   setTimeout(() => {
     io.emit('poll-ended');
-    pollManager.endPoll();
+
+    const finalResults = pollManager.getResults();       
+    pollManager.saveToHistory(poll, finalResults);       
+
+    pollManager.endPoll();                              
   }, poll.duration * 1000);
 };
 

@@ -1,5 +1,6 @@
 let currentPoll = null;
 let responses = {};
+let pollHistory = []; // ✅ new
 
 const startNewPoll = (poll) => {
   currentPoll = poll;
@@ -27,6 +28,18 @@ const getResults = () => {
   return tally;
 };
 
+// ✅ new: Save results
+const saveToHistory = (poll, results) => {
+  pollHistory.push({
+    question: poll.question,
+    timestamp: poll.timestamp,
+    results
+  });
+};
+
+// ✅ new: Return all history
+const getHistory = () => pollHistory;
+
 module.exports = {
   startNewPoll,
   endPoll,
@@ -34,4 +47,6 @@ module.exports = {
   hasResponded,
   addResponse,
   getResults,
+  saveToHistory,
+  getHistory
 };

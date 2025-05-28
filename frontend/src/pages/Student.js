@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import socket from "../socket";
 import { v4 as uuidv4 } from "uuid";
+import ChatPopup from "./ChatPopup";
 
 const Student = () => {
   const [studentId] = useState(() => {
@@ -134,6 +135,7 @@ const Student = () => {
       ) : (
         <p>Waiting for the teacher to start a poll...</p>
       )}
+      <ChatPopup name={name} />
     </div>
   );
 };
