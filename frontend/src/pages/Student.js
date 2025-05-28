@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import socket from "../socket";
 import { v4 as uuidv4 } from "uuid";
 import ChatPopup from "./ChatPopup";
+import { FaRegCommentAlt } from "react-icons/fa"
+import "../styles/EnterName.css";
 
 const Student = () => {
   const [studentId] = useState(() => {
@@ -16,6 +18,7 @@ const Student = () => {
   const [submitted, setSubmitted] = useState(false);
   const [results, setResults] = useState({});
   const [timeLeft, setTimeLeft] = useState(60);
+  const [showChat, setShowChat] = useState(false);
 
   useEffect(() => {
     sessionStorage.setItem("studentId", studentId);
@@ -76,21 +79,43 @@ const Student = () => {
 
   if (!name) {
     return (
-      <div style={{ padding: 20 }}>
-        <h2>Enter Your Name</h2>
-        <input
-          value={inputName}
-          onChange={(e) => setInputName(e.target.value)}
-        />
-        <button onClick={handleNameSubmit}>Join</button>
+      <div className="enter-name-container">
+        <div className="enter-name-badge">✧ Intervue Poll</div>
+
+        <h1 className="enter-name-title">
+          Let’s <strong>Get Started</strong>
+        </h1>
+
+        <p className="enter-name-description">
+          If you’re a student, you’ll be able to <strong>submit your answers</strong>, participate in live polls, and see how your responses compare with your classmates
+        </p>
+
+        <div className="enter-name-form">
+          <label htmlFor="name" className="enter-name-label">
+            Enter your Name
+          </label>
+          <input
+            id="name"
+            value={inputName}
+            onChange={(e) => setInputName(e.target.value)}
+            className="enter-name-input"
+            placeholder="Your name"
+          />
+        </div>
+
+        <button
+          onClick={handleNameSubmit}
+          disabled={!inputName.trim()}
+          className="enter-name-button"
+        >
+          Continue
+        </button>
       </div>
     );
   }
 
   return (
     <div style={{ padding: 20 }}>
-      <h2>Welcome, {name}</h2>
-
       {currentPoll ? (
         <>
           <h3>{currentPoll.question}</h3>
@@ -142,10 +167,20 @@ const Student = () => {
           )}
         </>
       ) : (
-        <p>Waiting for the teacher to start a poll...</p>
+        <div className="poll-waiting-container">
+          <div className="poll-badge">✧ Intervue Poll</div>
+          <div className="loader"></div>
+          <p className="poll-waiting-text">Wait for the teacher to ask questions..</p>
+        </div>
       )}
 
-      <ChatPopup name={name} />
+      {/* Chat toggle button */}
+      <div className="chat-toggle-container">
+        <button className="chat-toggle-button" onClick={() => setShowChat(!showChat)}>
+          <FaRegCommentAlt size={20} />
+        </button>
+        {showChat && <ChatPopup name={name} />}
+      </div>
     </div>
   );
 };

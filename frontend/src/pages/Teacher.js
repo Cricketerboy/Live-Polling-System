@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import socket from "../socket";
 import ChatPopup from "./ChatPopup";
+import "../styles/Teacher.css"; 
 
 const Teacher = () => {
   const [question, setQuestion] = useState("");
   const [duration, setDuration] = useState(60);
-  const [options, setOptions] = useState(["", "", "", ""]);
+  const [options, setOptions] = useState(["", ""]);
   const [correctAnswer, setCorrectAnswer] = useState("");
   const [currentPoll, setCurrentPoll] = useState(null);
   const [results, setResults] = useState({});
@@ -13,10 +14,7 @@ const Teacher = () => {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    socket.on("poll-results", (data) => {
-      setResults(data);
-    });
-
+    socket.on("poll-results", (data) => setResults(data));
     socket.on("poll-ended", () => {
       setPollActive(false);
       setCurrentPoll(null);
@@ -54,107 +52,121 @@ const Teacher = () => {
     setPollActive(true);
     setResults({});
     setQuestion("");
-    setOptions(["", "", "", ""]);
+    setOptions(["", ""]);
     setCorrectAnswer("");
   };
 
   const fetchHistory = async () => {
-    const res = await fetch("http://localhost:5000/api/poll-history");
+    const res = await fetch("https://live-polling-system-h2kx.onrender.com/api/poll-history");
     const data = await res.json();
     setHistory(data);
   };
 
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>Teacher Dashboard</h2>
+ // Only showing updated return part
+return (
+  <div className="teacher-container">
+    <span className="tag">✧ Intervue Poll</span>
+    <h1 className="title">Let’s <strong>Get Started</strong></h1>
+    <p className="subtitle">
+      you’ll have the ability to create and manage polls, ask questions, and monitor your students' responses in real-time.
+    </p>
 
-      <input
-        type="text"
-        placeholder="Enter poll question"
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
-        disabled={pollActive}
-      />
-      <br /><br />
+    <div className="section">
+  <div className="top-row">
+    <label className="label">Enter your question</label>
+    <select
+      value={duration}
+      onChange={(e) => setDuration(e.target.value)}
+      disabled={pollActive}
+      className="duration-select"
+    >
+      {[30, 60, 90].map((d) => (
+        <option key={d} value={d}>{d} seconds</option>
+      ))}
+    </select>
+  </div>
+  <textarea
+    value={question}
+    onChange={(e) => setQuestion(e.target.value)}
+    placeholder="Type your question..."
+    maxLength={100}
+    disabled={pollActive}
+    className="question-input"
+  />
+</div>
 
-      <h4>Options:</h4>
+
+    <div className="section">
+      <label className="label">Edit Options</label>
       {options.map((opt, index) => (
-        <div key={index}>
+        <div className="option-row" key={index}>
+          <span className="option-number">{index + 1}</span>
           <input
             type="text"
-            placeholder={`Option ${index + 1}`}
             value={opt}
             onChange={(e) => {
-              const updated = [...options];
-              updated[index] = e.target.value;
-              setOptions(updated);
+              const newOptions = [...options];
+              newOptions[index] = e.target.value;
+              setOptions(newOptions);
             }}
+            placeholder={`Option ${index + 1}`}
             disabled={pollActive}
+            className="option-input"
           />
-          <label>
-            <input
-              type="radio"
-              name="correct"
-              value={opt}
-              checked={correctAnswer === opt}
-              onChange={() => setCorrectAnswer(opt)}
-              disabled={pollActive}
-            />
-            Correct
-          </label>
+          <div className="radio-group">
+            <label><input type="radio" name="correct" value={opt} checked={correctAnswer === opt} onChange={() => setCorrectAnswer(opt)} disabled={pollActive} /> Yes</label>
+            <label><input type="radio" name="correct" value={opt} checked={correctAnswer !== opt && correctAnswer === ""} onChange={() => setCorrectAnswer("")} disabled={pollActive} /> No</label>
+          </div>
         </div>
       ))}
+      <button onClick={() => setOptions([...options, ""])} className="add-option" disabled={pollActive}>
+        + Add More option
+      </button>
+    </div>
 
-      <br />
-      <input
-        type="number"
-        placeholder="Poll duration (sec)"
-        value={duration}
-        onChange={(e) => setDuration(e.target.value)}
-        disabled={pollActive}
-      />
-      <br /><br />
-      <button onClick={handleCreatePoll} disabled={pollActive}>
+    <div className="button-row">
+      <button onClick={handleCreatePoll} disabled={pollActive} className="ask-button">
         Ask Question
       </button>
+    </div>
 
-      {currentPoll && (
-        <div>
-          <h3>Current Question: {currentPoll.question}</h3>
-          <h4>Live Results:</h4>
-          <ul>
-            {currentPoll.options.map((opt) => (
-              <li key={opt}>
-                {opt}: {results[opt] || 0} votes{" "}
-                {currentPoll.correctAnswer === opt && "✅"}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+    {currentPoll && (
+      <div className="results-card">
+        <h3>Current Question: {currentPoll.question}</h3>
+        <h4>Live Results:</h4>
+        <ul>
+          {currentPoll.options.map((opt) => (
+            <li key={opt}>
+              {opt}: {results[opt] || 0} votes{" "}
+              {currentPoll.correctAnswer === opt && "✅"}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
 
-      <br />
-      <button onClick={fetchHistory}>View Past Polls</button>
+    {/* <div className="history-section">
+      <button onClick={fetchHistory} className="history-button">View Past Polls</button>
       <ul>
         {history.map((poll, i) => (
           <li key={i}>
-            <strong>{poll.question}</strong> -{" "}
-            {new Date(poll.timestamp).toLocaleTimeString()}
+            <strong>{poll.question}</strong> - {new Date(poll.timestamp).toLocaleTimeString()}
             <ul>
               {Object.entries(poll.results).map(([opt, count]) => (
                 <li key={opt}>
-                  {opt}: {count}{" "}
-                  {poll.correctAnswer === opt && "✅"}
+                  {opt}: {count} {poll.correctAnswer === opt && "✅"}
                 </li>
               ))}
             </ul>
           </li>
         ))}
       </ul>
+    </div> */}
 
-      <ChatPopup name="Teacher" />
-    </div>
-  );
+    {/* <ChatPopup name="Teacher" /> */}
+  </div>
+);
+
 };
 
 export default Teacher;

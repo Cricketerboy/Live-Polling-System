@@ -1,0 +1,110 @@
+
+.role-container {
+ display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #fff;
+  font-family: 'Inter', sans-serif;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.badge {
+  background: linear-gradient(to right, #7765DA, #4F0DCE);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+
+h1 {
+  font-size: 32px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 400;
+  margin: 0 0 5px 0; 
+}
+
+
+
+p {
+  color: #afa2a2;
+  font-size: 15px;
+  font-family: 'Sora', sans-serif;
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+p strong {
+  font-weight:600; 
+}
+
+.roles {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+.role-card h3 {
+  margin: 0;
+  font-size: 18px; 
+  font-weight: 600;
+  font-family: 'Sora', sans-serif;
+}
+
+.role-card p {
+  margin: 0;
+  font-size: 14px; 
+  color: #666;
+  font-family: 'Sora', sans-serif;
+}
+.role-card {
+  width: 280px;
+  height: 100px;
+  border: 3px solid #ccc;
+  padding: 8px 17px 15px 25px; 
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  text-align: left; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  gap: 5px; 
+}
+
+
+.role-card:hover {
+  border-color: #5767D0;
+}
+
+.role-card.selected {
+  border-color: #5767D0;
+  box-shadow: 0 0 0 2px #ede9fe;
+}
+
+.continue-btn {
+  padding: 10px 50px;
+  font-size: 16px;
+  font-family: 'Sora', sans-serif;
+  border: none;
+  background: linear-gradient(to right, #6366f1, #8b5cf6);
+  color: #fff;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.continue-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
