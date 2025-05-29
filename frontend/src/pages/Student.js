@@ -114,18 +114,28 @@ const Student = () => {
     );
   }
 
-  return (
-    <div style={{ padding: 20 }}>
-      {currentPoll ? (
-        <>
-          <h3>{currentPoll.question}</h3>
-          <p>Time left: {timeLeft} seconds</p>
+ return (
+  <div style={{ padding: 20 }}>
+    {currentPoll ? (
+      <>
+        <div className="poll-container">
+          <div className="poll-question-header">
+            <h3>Question 1</h3>
+            <span className="timer">
+              ⏱️ <span className="red">{`00:${String(timeLeft).padStart(2, '0')}`}</span>
+            </span>
+          </div>
 
-          {!submitted && timeLeft > 0 ? (
-            <>
-              {currentPoll.options.map((opt) => (
-                <div key={opt}>
-                  <label>
+          <div className="poll-question-box">
+            <h4>{currentPoll.question}</h4>
+
+            {!submitted && timeLeft > 0 ? (
+              <>
+                {currentPoll.options.map((opt, index) => (
+                  <label
+                    key={opt}
+                    className={`poll-option ${selectedOption === opt ? 'selected' : ''}`}
+                  >
                     <input
                       type="radio"
                       name="poll"
@@ -133,56 +143,85 @@ const Student = () => {
                       checked={selectedOption === opt}
                       onChange={(e) => setSelectedOption(e.target.value)}
                     />
+                    <span className="option-circle">{index + 1}</span>
                     {opt}
                   </label>
-                </div>
-              ))}
-              <button onClick={handleSubmit} disabled={!selectedOption}>
+                ))}
+              </>
+            ) : (
+              <div className="poll-results">
+                {currentPoll.options.map((opt, index) => {
+                  const totalVotes = Object.values(results).reduce((a, b) => a + b, 0);
+                  const votes = results[opt] || 0;
+                  const percentage = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0;
+
+                  return (
+                   <div key={opt} className="poll-result-bar">
+  <div
+    className="poll-result-fill"
+    style={{ width: `${percentage}%` }}
+  >
+    <span className={`option-label ${percentage >= 50 ? 'white-text' : 'black-text'}`}>
+      <span
+        className={`option-circle ${selectedOption === opt ? 'selected-circle' : ''}`}
+      >
+        {index + 1}
+      </span>
+      {opt}
+    </span>
+  </div>
+
+  <span className="percentage-static">{percentage}%</span>
+</div>
+
+
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+
+          {/* Submit Button OUTSIDE the poll-question-box */}
+          {!submitted && timeLeft > 0 && (
+            <div className="submit-button-container">
+              <button
+                className="submit-btn"
+                onClick={handleSubmit}
+                disabled={!selectedOption}
+              >
                 Submit
               </button>
-            </>
-          ) : (
-            <>
-              <h4>Live Results:</h4>
-              <ul>
-                {currentPoll.options.map((opt) => (
-                  <li key={opt}>
-                    {opt}: {results[opt] || 0} votes{" "}
-                    {opt === currentPoll.correctAnswer && "✅"}
-                  </li>
-                ))}
-              </ul>
-
-              {submitted && (
-                <p>
-                  You selected: <strong>{selectedOption}</strong> —{" "}
-                  {selectedOption === currentPoll.correctAnswer ? (
-                    <span style={{ color: "green" }}>Correct ✅</span>
-                  ) : (
-                    <span style={{ color: "red" }}>Incorrect ❌</span>
-                  )}
-                </p>
-              )}
-            </>
+            </div>
           )}
-        </>
-      ) : (
-        <div className="poll-waiting-container">
-          <div className="poll-badge">✧ Intervue Poll</div>
-          <div className="loader"></div>
-          <p className="poll-waiting-text">Wait for the teacher to ask questions..</p>
-        </div>
-      )}
 
-      {/* Chat toggle button */}
-      <div className="chat-toggle-container">
-        <button className="chat-toggle-button" onClick={() => setShowChat(!showChat)}>
-          <FaRegCommentAlt size={20} />
-        </button>
-        {showChat && <ChatPopup name={name} />}
+          
+        </div>
+          {/* Wait message shown after results */}
+        {submitted && (
+          <div className="wait-message-container">
+            Wait for the teacher to ask a new question..
+          </div>
+        )}
+      </>
+    ) : (
+      <div className="poll-waiting-container">
+        <div className="poll-badge">✧ Intervue Poll</div>
+        <div className="loader"></div>
+        <p className="poll-waiting-text">Wait for the teacher to ask questions..</p>
       </div>
+    )}
+
+    {/* Chat toggle button */}
+    <div className="chat-toggle-container">
+      <button className="chat-toggle-button" onClick={() => setShowChat(!showChat)}>
+        <FaRegCommentAlt size={20} />
+      </button>
+      {showChat && <ChatPopup name={name} />}
     </div>
-  );
+  </div>
+);
+
 };
 
 export default Student;

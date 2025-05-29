@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import socket from "../socket";
 import ChatPopup from "./ChatPopup";
 import "../styles/Teacher.css"; 
+import { FaRegCommentAlt } from 'react-icons/fa';
 
 const Teacher = () => {
   const [question, setQuestion] = useState("");
@@ -12,6 +13,8 @@ const Teacher = () => {
   const [results, setResults] = useState({});
   const [pollActive, setPollActive] = useState(false);
   const [history, setHistory] = useState([]);
+  const [showResultsScreen, setShowResultsScreen] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   useEffect(() => {
     socket.on("poll-results", (data) => setResults(data));
@@ -80,7 +83,7 @@ return (
       disabled={pollActive}
       className="duration-select"
     >
-      {[30, 60, 90].map((d) => (
+      {[30, 60, 180].map((d) => (
         <option key={d} value={d}>{d} seconds</option>
       ))}
     </select>
@@ -97,7 +100,10 @@ return (
 
 
     <div className="section">
-      <label className="label">Edit Options</label>
+       <div className="options-header">
+    <label className="label">Edit Options</label>
+    <span className="correct-label">Is it correct?</span>
+  </div>
       {options.map((opt, index) => (
         <div className="option-row" key={index}>
           <span className="option-number">{index + 1}</span>
@@ -123,48 +129,73 @@ return (
         + Add More option
       </button>
     </div>
-
     <div className="button-row">
       <button onClick={handleCreatePoll} disabled={pollActive} className="ask-button">
         Ask Question
       </button>
     </div>
 
-    {currentPoll && (
-      <div className="results-card">
-        <h3>Current Question: {currentPoll.question}</h3>
-        <h4>Live Results:</h4>
-        <ul>
-          {currentPoll.options.map((opt) => (
-            <li key={opt}>
-              {opt}: {results[opt] || 0} votes{" "}
-              {currentPoll.correctAnswer === opt && "✅"}
-            </li>
-          ))}
-        </ul>
+          {currentPoll && showResultsScreen && (
+        <div style={{ padding: 20 }}>
+          <div className="poll-container">
+            <div className="poll-question-header">
+              <h3>Current Question</h3>
+              <span className="timer">⏱️ Live</span>
+            </div>
+
+            <div className="poll-question-box">
+              <h4>{currentPoll.question}</h4>
+
+              <div className="poll-results">
+                {currentPoll.options.map((opt, index) => {
+                  const totalVotes = Object.values(results).reduce((a, b) => a + b, 0);
+                  const votes = results[opt] || 0;
+                  const percentage = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0;
+
+                  return (
+                    <div key={opt} className="poll-result-bar">
+                      <div
+                        className="poll-result-fill"
+                        style={{ width: `${percentage}%` }}
+                      >
+                        <span
+                          className={`option-label ${percentage >= 50 ? 'white-text' : 'black-text'}`}
+                        >
+                          <span
+                            className={`option-circle ${
+                              currentPoll.correctAnswer === opt ? 'selected-circle' : ''
+                            }`}
+                          >
+                            {index + 1}
+                          </span>
+                          {opt}
+                        </span>
+                      </div>
+                      <span className="percentage-static">{percentage}%</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="wait-message-container">
+              Waiting for students to finish answering...
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Chat toggle button */}
+      <div className="chat-toggle-container">
+        <button
+          className="chat-toggle-button"
+          onClick={() => setShowChat(!showChat)}
+        >
+          <FaRegCommentAlt size={20} />
+        </button>
+        {showChat && <ChatPopup name="Teacher" />}
       </div>
-    )}
-
-    {/* <div className="history-section">
-      <button onClick={fetchHistory} className="history-button">View Past Polls</button>
-      <ul>
-        {history.map((poll, i) => (
-          <li key={i}>
-            <strong>{poll.question}</strong> - {new Date(poll.timestamp).toLocaleTimeString()}
-            <ul>
-              {Object.entries(poll.results).map(([opt, count]) => (
-                <li key={opt}>
-                  {opt}: {count} {poll.correctAnswer === opt && "✅"}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </div> */}
-
-    {/* <ChatPopup name="Teacher" /> */}
-  </div>
+    </div>
 );
 
 };
