@@ -3,7 +3,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Cricketerboy/Todo-Summary-Assistant.git
+git clone https://github.com/Cricketerboy/Live-Polling-System.git
 ```
 ---
 ## Base URL for APIs
