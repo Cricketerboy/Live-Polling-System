@@ -1,9 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import socket from '../socket';
+import React, { useState, useEffect } from "react";
+import socket from "../socket";
+import "../styles/Teacher.css";
 
 const ChatPopup = ({ name }) => {
+  const [activeTab, setActiveTab] = useState("chat");
   const [messages, setMessages] = useState([]);
   const [msg, setMsg] = useState("");
+  
+
+  const participants = [
+    "Rahul Arora",
+    "Pushpender Rautela",
+    "Rijul Zalpuri",
+    "Nadeem N",
+    "Ashwin Sharma",
+  ];
 
   useEffect(() => {
     socket.on("receive-message", (data) => {
@@ -16,26 +27,66 @@ const ChatPopup = ({ name }) => {
   }, []);
 
   const sendMessage = () => {
-    if (!msg.trim()) return;
+  if (!msg.trim()) return;
 
-    socket.emit("send-message", {
-      sender: name,
-      message: msg.trim()
-    });
+  socket.emit("send-message", {
+    sender: name,
+    message: msg.trim(),
+  });
 
-    setMsg("");
-  };
+  setMsg(""); // clear input only
+};
 
   return (
-    <div style={{ position: 'fixed', bottom: 20, right: 20, background: '#fff', border: '1px solid #ccc', padding: 10, width: 300 }}>
-      <h4>Chat</h4>
-      <div style={{ height: 150, overflowY: 'auto', border: '1px solid #eee', marginBottom: 8, padding: 5 }}>
-        {messages.map((m, idx) => (
-          <div key={idx}><strong>{m.sender}:</strong> {m.message}</div>
-        ))}
+    <div className="chat-popup-container">
+      <div className="chat-header">
+        <div
+          className={`chat-tab ${activeTab === "chat" ? "active" : ""}`}
+          onClick={() => setActiveTab("chat")}
+        >
+          Chat
+        </div>
+        <div
+          className={`chat-tab ${activeTab === "participants" ? "active" : ""}`}
+          onClick={() => setActiveTab("participants")}
+        >
+          Participants
+        </div>
       </div>
-      <input value={msg} onChange={(e) => setMsg(e.target.value)} placeholder="Type..." style={{ width: '80%' }} />
-      <button onClick={sendMessage} style={{ width: '18%' }}>Send</button>
+
+      <div className="chat-body">
+        {activeTab === "chat" ? (
+          <>
+            <div className="chat-messages">
+              {messages.map((m, i) => (
+                <div
+  key={i}
+  className={`message-row ${m.sender === name ? "right" : "left"}`}
+>
+  <div className="message-bubble">{m.message}</div>
+  <div className="sender-label">{m.sender}</div>
+</div>
+              ))}
+            </div>
+            <div className="chat-input">
+              <input
+                value={msg}
+                onChange={(e) => setMsg(e.target.value)}
+                placeholder="Type..."
+              />
+              <button onClick={sendMessage}>Send</button>
+            </div>
+          </>
+        ) : (
+          <div className="participants-list">
+            {participants.map((p, i) => (
+              <div className="participant-row" key={i}>
+                <span>{p}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Teacher.css";
+import ChatPopup from "./ChatPopup";
+import { FaRegCommentAlt,  FaEye } from "react-icons/fa";
 
 const PollHistory = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showChat, setShowChat] = useState(false);
 
   useEffect(() => {
     fetch("https://live-polling-system-h2kx.onrender.com/api/poll-history")
@@ -72,6 +75,12 @@ const PollHistory = () => {
           );
         })
       )}
+      <div className="chat-toggle-container">
+      <button className="chat-toggle-button" onClick={() => setShowChat(!showChat)}>
+        <FaRegCommentAlt size={20} />
+      </button>
+      {showChat && <ChatPopup name={"Teacher"} />}
+    </div>
     </div>
   );
 };

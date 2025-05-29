@@ -290,3 +290,154 @@
 .title {
     font-weight: 12px;
 }
+
+.chat-popup-container {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 320px;
+  height: 400px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.chat-header {
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+.chat-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 2px solid transparent;
+}
+
+.chat-tab.active {
+  border-bottom: 2px solid #9333ea;
+  color: #9333ea;
+}
+
+.chat-body {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+/* .message-left, .message-right {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.message-bubble-left {
+  background-color: #333;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 75%;
+  align-self: flex-start;
+}
+
+.message-bubble-right {
+  background-color: #9333ea;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 75%;
+  align-self: flex-end;
+} */
+
+.message-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  max-width: 90%;
+}
+
+.message-row.right {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.message-row.left {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.message-bubble {
+  background-color: #9333ea;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 12px;
+  word-break: break-word;
+}
+
+.message-row.left .message-bubble {
+  background-color: #333;
+}
+
+.sender-label {
+  font-size: 11px;
+  color: #888;
+  margin: 4px 6px;
+}
+
+.chat-input {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.chat-input button {
+  padding: 6px 12px;
+  background-color: #9333ea;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.participants-list {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.participant-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.kick-link {
+  color: #2563eb;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: underline;
+}
