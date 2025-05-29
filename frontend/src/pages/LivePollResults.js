@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Teacher.css";
-import ChatPopup from "./ChatPopup";
+import ChatContainer from "./ChatContainer";
 import { FaRegCommentAlt,  FaEye } from "react-icons/fa";
 
 
@@ -74,7 +74,7 @@ const PollResultsScreen = ({ currentPoll, results, onAskNewQuestion, allAnswered
       <button className="chat-toggle-button" onClick={() => setShowChat(!showChat)}>
         <FaRegCommentAlt size={20} />
       </button>
-      {showChat && <ChatPopup name={"Teacher"} />}
+      {showChat && <ChatContainer name={"Teacher"} />}
     </div>
     </div>
   );

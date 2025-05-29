@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import socket from "../socket";
 import { v4 as uuidv4 } from "uuid";
-import ChatPopup from "./ChatPopup";
+import ChatContainer from "./ChatContainer";
 import { FaRegCommentAlt } from "react-icons/fa"
 import "../styles/EnterName.css";
 
@@ -217,7 +217,7 @@ const Student = () => {
       <button className="chat-toggle-button" onClick={() => setShowChat(!showChat)}>
         <FaRegCommentAlt size={20} />
       </button>
-      {showChat && <ChatPopup name={name} />}
+      {showChat && <ChatContainer name={name} />}
     </div>
   </div>
 );

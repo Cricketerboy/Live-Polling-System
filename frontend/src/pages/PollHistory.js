@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Teacher.css";
-import ChatPopup from "./ChatPopup";
+import ChatContainer from "./ChatContainer";
 import { FaRegCommentAlt,  FaEye } from "react-icons/fa";
 
 const PollHistory = () => {
@@ -79,7 +79,7 @@ const PollHistory = () => {
       <button className="chat-toggle-button" onClick={() => setShowChat(!showChat)}>
         <FaRegCommentAlt size={20} />
       </button>
-      {showChat && <ChatPopup name={"Teacher"} />}
+      {showChat && <ChatContainer name={"Teacher"} />}
     </div>
     </div>
   );

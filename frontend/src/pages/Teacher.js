@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import socket from "../socket";
-import ChatPopup from "./ChatPopup";
+import ChatContainer from "./ChatContainer";
 import "../styles/Teacher.css"; 
 import PollResultsScreen from "./LivePollResults";
 
